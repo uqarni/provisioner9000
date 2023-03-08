@@ -2,6 +2,7 @@ import openai
 import pandas as pd
 import os
 import json
+import matplotlib.pyplot as plt
 
 
 ##training file "id": "file-LrwILn6VBeUCD7LzmIWhUlMY"
@@ -61,21 +62,47 @@ results = []
 # ####
 
 answers = pd.read_csv('testresults.csv')
-wrong = 0
-right = 0
+
+correct = 0
+false_pos = 0
+false_neg = 0
 
 for i,row in answers.iterrows():
     if row["difference"] == 0:
-        right +=1
+        correct +=1
     elif row["difference"] == 1:
-        wrong +=1
-        print(row["actual"]+" was right but it thought "+row["predicted"])
+        if row["actual"] == "yes":
+            false_neg +=1
+        else:
+            false_pos +=1
 
-print("right:")
-print(right)
-print("wrong:")
-print(wrong)
 
+print("correct:")
+print(correct)
+print("false positive:")
+print(false_pos)
+print("false negative:")
+print(false_neg)
+
+
+# Create a list of labels for the x-axis
+labels = ['Correct', 'False Positive', 'False Negative']
+
+# Create a list of values for the y-axis
+values = [correct, false_pos, false_neg]
+
+# Create the bar graph
+plt.bar(labels, values)
+
+# Add a title to the graph
+plt.title('LinkedIn Learning License Prediction Summary')
+
+# Add labels to the x and y axes
+plt.xlabel('Category')
+plt.ylabel('Count')
+
+# Display the graph
+plt.show()
 
 
 
